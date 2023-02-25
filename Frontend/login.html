@@ -31,10 +31,13 @@
                 password: userpassword.value
             }
             const response = await axios.post('http://localhost:3000/user/login', my_obj)
-            if (response.data.message == "user does not exists") {
+            if (response.data.message == "user not found") {
                 document.body.innerHTML = document.body.innerHTML + '<h3>User does not exists</h3>'
-            }else if (response.data.message == "wrong password") {
+            }else if (response.data.message == "user is not authorized") {
                 document.body.innerHTML = document.body.innerHTML + '<h3>Wrong Password</h3>'
+            }
+            else{
+                document.body.innerHTML = document.body.innerHTML + '<h3>User Login successfull</h3>'
             }
             console.log(response)
             // username.value = ""
