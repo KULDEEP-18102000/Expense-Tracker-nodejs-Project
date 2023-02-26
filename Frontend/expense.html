@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense</title>
+</head>
+
+<body>
+    <form id="my-form">
+        <label for="amount">Amount</label><br>
+        <input type="number" id="amount" name="amount"><br>
+        <label for="category">Category:</label>
+
+        <select name="category" id="category">
+            <option value="petrol">petrol</option>
+            <option value="diesel">diesel</option>
+            <option value="elecricity">elecricity</option>
+            <option value="other">other</option>
+        </select><br>
+        <label for="description">Description</label><br>
+        <input type="text" id="description" name="description"><br>
+        
+        <button type="submit">Add expense</button><br>
+
+        <ul id="list-items">
+
+        </ul>
+    </form>
+    <script>
+        const expenseAmount = document.getElementById('amount')
+        // console.log(expenseAmount)
+        const expenseCategory = document.getElementById('category')
+        const expenseDescription = document.getElementById('description')
+        const ul = document.getElementById('list-items')
+
+
+
+        document.getElementById('my-form').addEventListener('submit', onsubmit)
+        window.addEventListener("DOMContentLoaded", getExpenses)
+
+        async function getExpenses() {
+            try {
+                const expenses = await axios.get('http://localhost:3000/expense/get-expenses')
+                console.log(expenses.data)
+                for (let i = 0; i < expenses.data.length; i++) {
+                    const li = document.createElement('li')
+                    console.log(expenses.data[i])
+                    li.appendChild(document.createTextNode(`${expenses.data[i].amount} ${expenses.data[i].category} ${expenses.data[i].description}`))
+                    li.setAttribute("id", expenses.data[i].id)
+                    const delete_btn = `<button onclick="deleteFunction(event)">delete</button>`;
+                    li.innerHTML = li.innerHTML + delete_btn
+                    ul.appendChild(li)
+                }
+            } catch (error) {
+                throw error
+            }
+        }
+
+        async function onsubmit() {
+            try {
+                const expense_obj = {
+                    amount: expenseAmount.value,
+                    category: expenseCategory.value,
+                    description: expenseDescription.value
+                }
+                const expense = await axios.post('http://localhost:3000/expense/add-expense', expense_obj)
+                console.log(expense)
+                const li = document.createElement('li')
+                li.appendChild(document.createTextNode(`${expense.amount} ${expense.category} ${expense.description}`))
+                li.setAttribute("id", expense.id)
+                const delete_btn = `<button onclick="deleteFunction(event)">delete</button>`;
+                li.innerHTML = li.innerHTML + delete_btn
+                ul.appendChild(li)
+            } catch (error) {
+                throw error
+            }
+        }
+
+        async function deleteFunction(event) {
+            try {
+                event.preventDefault()
+                const ul_item = event.target.parentNode.parentNode
+                const li_item = event.target.parentNode
+                ul_item.removeChild(li_item)
+                await axios.delete(`http://localhost:3000/expense/delete-expense/${event.target.parentNode.id}`)
+            } catch (error) {
+                throw error
+            }
+        }
+
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.2/axios.min.js"></script>
+</body>
+
+</html>

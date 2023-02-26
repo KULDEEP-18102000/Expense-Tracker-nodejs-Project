@@ -1,5 +1,6 @@
 const User=require('../models/user')
 const bcrypt=require('bcryptjs')
+const path=require('path')
 
 exports.signUp=async(req,res,next)=>{
     // console.log(req.body)
@@ -38,7 +39,9 @@ exports.login=async(req,res,next)=>{
                 res.status(500).json({success:false, message:"Something went wrong"})
             }
             if(result===true){
-                res.status(200).json({success:true,message:"user login successfull"})
+                // res.status(200).json({success:true,message:"user login successfull"})
+                res.redirect('/expense')
+                // res.sendFile(path.join(__dirname,'../../Frontend/expense.html'))
             }else{
                 res.status(400).json({success:false,message:"incorrect password"})
             }
