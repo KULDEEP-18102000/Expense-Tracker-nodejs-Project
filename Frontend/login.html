@@ -30,18 +30,12 @@
                 email: useremail.value,
                 password: userpassword.value
             }
-            const response = await axios.post('http://localhost:3000/user/login', my_obj)
-            // if (response.data.message == "user not found") {
-            //     document.body.innerHTML = document.body.innerHTML + '<h3>User does not exists</h3>'
-            // }else if (response.data.message == "incorrect password") {
-            //     document.body.innerHTML = document.body.innerHTML + '<h3>Wrong Password</h3>'
-            // }
-            // else{
-            //     document.body.innerHTML = document.body.innerHTML + '<h3>User Login successfull</h3>'
-            // }
-            console.log(response)
-            document.body.innerHTML = document.body.innerHTML+`<h3>${responsem}</h3>`
-            // username.value = ""
+            try {
+                const response = await axios.post('http://localhost:3000/user/login', my_obj)
+                alert(response.data.message)
+            } catch (error) {
+                document.body.innerHTML = document.body.innerHTML + `<h3>${error.message}</h3>`
+            }
             useremail.value = ""
             userpassword.value = ""
         }
