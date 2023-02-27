@@ -6,7 +6,7 @@ exports.AddExpense=async(req,res)=>{
     const category=req.body.category
     const description=req.body.description
     try {
-        const expense=await Expense.create({amount:amount,category:category,description:description})
+        const expense=await Expense.create({amount:amount,category:category,description:description,userId:req.user.id})
         res.status(200).json(expense)
     } catch (error) {
         // res.status(500)
@@ -22,7 +22,7 @@ exports.AddExpense=async(req,res)=>{
 
 exports.getExpenses=async(req,res)=>{
     try {
-        const expenses=await Expense.findAll({})
+        const expenses=await Expense.findAll({where:{userId:req.user.id}})
         res.status(200).json(expenses)
     } catch (error) {
         console.log(error)
@@ -33,7 +33,11 @@ exports.deleteExpense=async(req,res)=>{
     const prodId=req.params.id
     Expense.findByPk(prodId)
     .then(expense=>{
-        return expense.destroy()
+        if(req.user.id===expense.userId){
+            return expense.destroy()
+        }else{
+            throw err
+        }
     })
     .then(res=>{
         console.log("deleted")

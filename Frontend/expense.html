@@ -43,7 +43,8 @@
 
         async function getExpenses() {
             try {
-                const expenses = await axios.get('http://localhost:3000/expense/get-expenses')
+                const token=localStorage.getItem('token')
+                const expenses = await axios.get('http://localhost:3000/expense/get-expenses',{headers:{"Authorization":token}})
                 console.log(expenses.data)
                 for (let i = 0; i < expenses.data.length; i++) {
                     const li = document.createElement('li')
@@ -66,7 +67,8 @@
                     category: expenseCategory.value,
                     description: expenseDescription.value
                 }
-                const expense = await axios.post('http://localhost:3000/expense/add-expense', expense_obj)
+                const token=localStorage.getItem('token')
+                const expense = await axios.post('http://localhost:3000/expense/add-expense', expense_obj,{headers:{"Authorization":token}})
                 console.log(expense)
                 const li = document.createElement('li')
                 li.appendChild(document.createTextNode(`${expense.amount} ${expense.category} ${expense.description}`))
@@ -85,7 +87,8 @@
                 const ul_item = event.target.parentNode.parentNode
                 const li_item = event.target.parentNode
                 ul_item.removeChild(li_item)
-                await axios.delete(`http://localhost:3000/expense/delete-expense/${event.target.parentNode.id}`)
+                const token=localStorage.getItem('token')
+                await axios.delete(`http://localhost:3000/expense/delete-expense/${event.target.parentNode.id}`,{headers:{"Authorization":token}})
             } catch (error) {
                 throw error
             }
