@@ -32,8 +32,10 @@
             }
             try {
                 const response = await axios.post('http://localhost:3000/user/login', my_obj)
+                // console.log(response)
                 alert(response.data.message)
                 localStorage.setItem('token',response.data.token)
+                localStorage.setItem('isPremium',response.data.isPremium)
                 window.location.href='/Frontend/expense.html'
             } catch (error) {
                 document.body.innerHTML = document.body.innerHTML + `<h3>${error.message}</h3>`

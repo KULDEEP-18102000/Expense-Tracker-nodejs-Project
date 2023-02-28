@@ -41,7 +41,7 @@ exports.login=async(req,res,next)=>{
                 res.status(500).json({success:false, message:"Something went wrong"})
             }
             if(result===true){
-                res.status(200).json({success:true,message:"user login successfull",token:generateAccessToken(user.id,user.name)})
+                res.status(200).json({success:true,message:"user login successfull",token:generateAccessToken(user.id,user.name),isPremium:user.ispremiumuser})
                 // res.redirect('/expense')
                 // res.sendFile(path.join(__dirname,'../../Frontend/expense.html'))
             }else{
