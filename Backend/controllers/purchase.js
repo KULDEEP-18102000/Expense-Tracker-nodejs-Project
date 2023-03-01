@@ -4,8 +4,8 @@ const Order=require('../models/orders')
 const purchasepremium=async(req,res)=>{
     try {
         var rzp=new Razorpay({
-            key_id:'rzp_test_jbtAtxA27t5PdV',
-            key_secret:'AIxGx9nzAOLKpMZytYD2oqeF'
+            key_id:'rzp_test_vaQi8LB2MM4hbT',
+            key_secret:'ILy2Nyb7JS3eveMpyesgk7kk'
         })
         const amount=3000
 
@@ -33,6 +33,7 @@ const updateTransactionStatus=(req,res)=>{
             order.update({paymentid:payment_id,status:'SUCCESSFUL'}).then(()=>{
                 req.user.update({ispremiumuser:true}).then(()=>{
                     return res.status(202).json({success:true,message:'Transaction Successfull'})
+                
                 }).catch((err)=>{
                     throw new Error(err)
                 })
