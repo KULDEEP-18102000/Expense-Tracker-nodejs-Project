@@ -15,6 +15,7 @@
         <label for="password">Password</label><br>
         <input type="password" id="password" name="password"><br>
         <button type="submit">Login</button><br>
+        <button id="forgot">Forgot Password</button>
         <a href="C:\Users\Dell\Downloads\sharpener\Expense Tracker nodejs project\Frontend\signup.html">Sign up</a>
     </form>
 
@@ -23,6 +24,10 @@
         const userpassword = document.getElementById('password')
 
         document.getElementById('my-form').addEventListener('submit', onSubmit);
+
+        document.getElementById('forgot').onclick=async function(){
+            window.location.href='/Frontend/forgot-password.html'
+        }
 
         async function onSubmit(e) {
             e.preventDefault();
