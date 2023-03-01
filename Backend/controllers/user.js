@@ -15,7 +15,7 @@ exports.signUp=async(req,res,next)=>{
     }else{
         bcrypt.hash(password,10,async(err,hash)=>{
             console.log(err)
-            await User.create({name:name,email:email,password:hash})
+            await User.create({name:name,email:email,password:hash,Total_cost:0})
             res.status(201).json({message:"successfully created new user"})
         })
     }

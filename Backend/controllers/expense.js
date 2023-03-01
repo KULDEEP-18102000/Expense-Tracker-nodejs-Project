@@ -1,5 +1,6 @@
 const path=require('path')
 const Expense=require('../models/expense')
+const User=require('../models/user')
 
 exports.AddExpense=async(req,res)=>{
     const amount=req.body.amount
@@ -7,6 +8,11 @@ exports.AddExpense=async(req,res)=>{
     const description=req.body.description
     try {
         const expense=await Expense.create({amount:amount,category:category,description:description,userId:req.user.id})
+        current_amount=req.user.Total_cost+parseInt(amount) 
+        const user=await User.findByPk(req.user.id)
+        user.Total_cost=current_amount
+        const final_user=await user.save()
+        console.log(final_user)
         res.status(200).json(expense)
     } catch (error) {
         // res.status(500)
