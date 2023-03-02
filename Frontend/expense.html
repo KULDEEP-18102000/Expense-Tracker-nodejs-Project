@@ -12,13 +12,20 @@
     <form id="my-form">
         <label for="amount">Amount</label><br>
         <input type="number" id="amount" name="amount"><br>
-        <label for="category">Category:</label>
+        <label for="category">Category:</label><br>
 
         <select name="category" id="category">
             <option value="petrol">petrol</option>
             <option value="diesel">diesel</option>
             <option value="elecricity">elecricity</option>
+            <option value="salary">salary</option>
             <option value="other">other</option>
+        </select><br>
+
+        <label for="type">Type:</label><br>
+        <select name="type" id="type">
+            <option value="expense">expense</option>
+            <option value="income">income</option>
         </select><br>
         <label for="description">Description</label><br>
         <input type="text" id="description" name="description"><br>
@@ -34,6 +41,8 @@
     <div id="premium">
         <button id="rzp-button1">Buy Premium</button>
     </div>
+
+    
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script>
         const expenseAmount = document.getElementById('amount')
@@ -58,6 +67,11 @@
             leadershio_btn.setAttribute('id', 'leadership')
             Premium.appendChild(leadershio_btn)
 
+            const report_btn = document.createElement('button')
+            report_btn.appendChild(document.createTextNode('show Report'))
+            report_btn.setAttribute('id', 'report')
+            Premium.appendChild(report_btn)
+
             console.log(document.getElementById('leadership'))
             document.getElementById('leadership').onclick = async function () {
                 console.log("clicked leadership")
@@ -79,6 +93,10 @@
                     // li.innerHTML = li.innerHTML + delete_btn
                     ul.appendChild(li)
                 }
+            }
+
+            document.getElementById('report').onclick=async function(){
+                window.location.href='/Frontend/report.html'
             }
 
         } else {

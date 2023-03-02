@@ -14,7 +14,7 @@ exports.forgotPassword = async (req, res) => {
     var Client = Sib.ApiClient.instance;
     // # Instantiate the client\
     var apiKey = Client.authentications['api-key'];
-    apiKey.apiKey = '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';
+    apiKey.apiKey = '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';
 
     const transEmailApi = new Sib.TransactionalEmailsApi();
 
@@ -40,10 +40,10 @@ exports.forgotPassword = async (req, res) => {
 
 exports.resetpassword = async (req, res) => {
     const id = req.params.id
-    const forgotRequest = await ForgotPassword.findOne({ id: id })
+    const forgotRequest = await ForgotPassword.findOne({where:{ id: id }})
     if (forgotRequest) {
         if (forgotRequest.isactive == true) {
-            forgotRequest.update({isactive:false})
+            forgotRequest.update({isactive:false}).then(()=>{console.log("suceesfull active")}).catch((err)=>{console.log(err)})
             res.status(200).send(`
     <html>
         <script>
