@@ -1,11 +1,20 @@
+const ForgotPassword = require('../models/forgotpasswordrequests')
+const User = require('../models/user')
+// import { v4 as uuidv4 } from 'uuid';
+const uuidv4 = require('uuid').v4
+const bcrypt=require('bcryptjs')
 
-exports.getresetPassword = async (req, res) => {
-    const useremail=req.body.email
+
+exports.forgotPassword = async (req, res) => {
+    const useremail = req.body.email
+    const user = await User.findOne({ email: useremail })
+    const forgotpassword = await ForgotPassword.create({ id: uuidv4(), userId: user.id, isactive: true })
+
     var Sib = require('sib-api-v3-sdk');
     var Client = Sib.ApiClient.instance;
     // # Instantiate the client\
     var apiKey = Client.authentications['api-key'];
-    apiKey.apiKey = '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';
+    apiKey.apiKey = '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';
 
     const transEmailApi = new Sib.TransactionalEmailsApi();
 
@@ -23,8 +32,58 @@ exports.getresetPassword = async (req, res) => {
         sender,
         to: receivers,
         subject: 'Your reset password',
-        textContent: 'your reset password has been sent to you'
+        htmlContent: `your reset password has been sent to you <a href="http://localhost:3000/password/resetpassword/${forgotpassword.id}">Reset Password</a> `
     })
         .then(console.log)
         .catch(console.log)
+}
+
+exports.resetpassword = async (req, res) => {
+    const id = req.params.id
+    const forgotRequest = await ForgotPassword.findOne({ id: id })
+    if (forgotRequest) {
+        if (forgotRequest.isactive == true) {
+            forgotRequest.update({isactive:false})
+            res.status(200).send(`
+    <html>
+        <script>
+                                        
+        </script>
+        <form action="/password/updatepassword/${id}" method="get">
+        <label for="newpassword">Enter New password</label>
+        <input name="newpassword" type="password" required></input>
+        <button>reset password</button>
+        </form>
+        </html>
+    `)
+    res.end()
+        }
+    }
+
+}
+
+exports.updatepasword = async (req, res) => {
+    const id = req.params.id
+    const new_password=req.query.newpassword
+    const forgotrequest=await ForgotPassword.findOne({id:id})
+    const userId=forgotrequest.userId
+    const user=await User.findOne({id:userId})
+    if(user){
+        bcrypt.hash(new_password,10,(error,result)=>{
+            if(error){
+                console.log(error)
+            }else{
+                user.update({password:result})
+                .then(()=>{
+                    res.status(200).json({message:'Successfully updated new user'})
+                })
+                .catch((error)=>{
+                    console.log(error)
+                })
+            }
+        })
+    }else{
+        res.status(404).json({ error: 'No user Exists', success: false})
+    }
+    
 }
