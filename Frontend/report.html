@@ -16,37 +16,36 @@
 </style>
 
 <body>
-    <h3>Monthly Report</h3>
-    <table style="width:80%">
-        <tr>
-            <th>Date</th>
-            <th>Description</th>
-            <th>Category</th>
-            <th>Income</th>
-            <th>Expense</th>
-        </tr>
-        <tr>
+    <h4>Download Your Report</h4>
+    <Button  style="margin: 10px;" id="download">Download</Button>
 
-        </tr>
+    <script>
+        window.addEventListener("DOMContentLoaded",async()=>{
+            const token=localStorage.getItem('token')
+            const files=await axios.get('http://localhost:3000/user/getallfiles',{headers:{"Authorization":token}})
+                for(let i=0;i<files.data.length;i++){
+                    let file=files.data[i]
+                    document.body.innerHTML=document.body.innerHTML+`<h5>${file.fileURl}-${file.createdAt}</h5>`
+                }
+                console.log(files)
+        })
 
-    </table>
+        document.getElementById('download').onclick=async function(){
+            const token=localStorage.getItem('token')
+            const response=await axios.get('http://localhost:3000/user/download',{headers:{"Authorization":token}})
+            if(response.status===201){
+                const a=document.createElement('a')
+                a.href=response.data.fileURl
+                a.download='myexpense.csv'
+                a.click()
+                // document.body.innerHTML=document.body.innerHTML+`<h5>${response.data.fileURl}</h5>`
+            }else{
+                throw new Error(response.data.message)
+            }
+        }
+    </script>
 
-    <h3>Yearly Report</h3>
-    <table style="width:80%">
-        <tr>
-            <th>Month</th>
-            <th>Income</th>
-            <th>Expense</th>
-            <th>Savings</th>
-        </tr>
-        <tr>
-
-        </tr>
-
-    </table>
-
-    <Button style="margin: 10px;" id="download">Download</Button>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.2/axios.min.js"></script>
 </body>
 
 </html>

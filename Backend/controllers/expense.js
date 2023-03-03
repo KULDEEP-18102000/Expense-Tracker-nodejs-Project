@@ -3,6 +3,29 @@ const path = require('path')
 const Expense = require('../models/expense')
 const User = require('../models/user')
 const sequelize = require('../util/database')
+const S3service=require('../services/S3services')
+// const { resolve } = require('path')
+const UserServices=require('../services/userservices')
+const File=require('../models/files')
+
+
+
+exports.downloadexpense = async (req, res) => {
+    try {
+        const expenses = await UserServices.getExpenses(req)
+        console.log(expenses)
+        const stringifiedexpenses = JSON.stringify(expenses)
+
+        const userId = req.user.id
+        const filename = `Expense${userId}/${new Date()}.txt`
+        const fileURl = await S3service.uploadToS3(stringifiedexpenses, filename)
+        await req.user.createFile({fileURl:fileURl})
+        res.status(201).json({ fileURl, success: true })
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({fileURl:'',success:false,err:error})
+    }
+}
 
 exports.AddExpense = async (req, res) => {
     const t = await sequelize.transaction()
@@ -29,6 +52,7 @@ exports.AddExpense = async (req, res) => {
 }
 
 
+
 exports.getExpenses = async (req, res) => {
     try {
         const expenses = await Expense.findAll({ where: { userId: req.user.id } })
@@ -41,7 +65,7 @@ exports.getExpenses = async (req, res) => {
 exports.deleteExpense = async (req, res) => {
     const t = await sequelize.transaction()
     try {
-        
+
         const prodId = req.params.id
         const expense = await Expense.findByPk(prodId)
         if (req.user.id === expense.userId) {
@@ -59,19 +83,13 @@ exports.deleteExpense = async (req, res) => {
         throw error
     }
 
+}
 
-    // Expense.findByPk(prodId)
-    // .then(expense=>{
-    //     if(req.user.id===expense.userId){
-    //         return expense.destroy()
-    //     }else{
-    //         throw err
-    //     }
-    // })
-    // .then(res=>{
-    //     console.log("deleted")
-    // })
-    // .catch(err=>{
-    //     console.log(err)
-    // })
+exports.GetAllFiles=async(req,res)=>{
+    try {
+        const files=await File.findAll({userId:req.user.id})
+        res.status(200).json(files)
+    } catch (error) {
+        res.status(500).json(error)
+    }
 }
