@@ -22,13 +22,22 @@
             <option value="other">other</option>
         </select><br>
 
-        <label for="type">Type:</label><br>
-        <select name="type" id="type">
+        <!-- <label for="type">Type:</label><br> -->
+        <!-- <select name="type" id="type">
             <option value="expense">expense</option>
             <option value="income">income</option>
-        </select><br>
+        </select><br> -->
         <label for="description">Description</label><br>
         <input type="text" id="description" name="description"><br>
+
+        <label for="rowperpage">Row per page:</label><br>
+        <select type="number" name="rowperpage" id="rowperpage">
+            <option value=2>2</option>
+            <option value=5>5</option>
+            <option value=10>10</option>
+            <option value=15>15</option>
+            <option value=20>20</option>
+        </select><br> 
 
 
         <button type="submit">Add expense</button><br>
@@ -52,6 +61,9 @@
         const expenseCategory = document.getElementById('category')
         const expenseDescription = document.getElementById('description')
         const ul = document.getElementById('list-items')
+        const rowperpage=document.getElementById('rowperpage').value
+        console.log(rowperpage)
+        localStorage.setItem('rows',rowperpage)
 
         const isPremium = JSON.parse(localStorage.getItem('isPremium'))
         console.log(isPremium)
@@ -139,14 +151,37 @@
 
         }
 
+        document.getElementById('rowperpage').onchange=async function(){
+            console.log("changed")
+            const rowperpage=document.getElementById('rowperpage').value
+            console.log(rowperpage)
+            const token=localStorage.getItem('token')
+            const page=1;
+            my_obj={
+                rowperpage:parseInt(rowperpage) 
+            }
+            try {
+                const response=await axios.post(`http://localhost:3000/expense/get-expenses?page=${page}`,my_obj,{headers:{"Authorization":token}})
+                console.log(response.data)
+            listexpenses(response.data.expenses)
+            showPagination(response.data)
+            } catch (error) {
+                console.log(error)
+            }
+        }
+
 
         document.getElementById('my-form').addEventListener('submit', onsubmit)
         
         window.addEventListener("DOMContentLoaded", async () => {
             const token=localStorage.getItem('token')
             const page=1;
+            // const rowperpage=document.ge
+            my_obj={
+                rowperpage:parseInt(rowperpage) 
+            }
             try {
-                const response=await axios.get(`http://localhost:3000/expense/get-expenses?page=${page}`,{headers:{"Authorization":token}})
+                const response=await axios.post(`http://localhost:3000/expense/get-expenses?page=${page}`,my_obj,{headers:{"Authorization":token}})
                 console.log(response.data)
             listexpenses(response.data.expenses)
             showPagination(response.data)
@@ -174,9 +209,13 @@
         }
 
         async function getExpenses(page){
+            const rowperpage=document.getElementById('rowperpage').value
+            my_obj={
+                rowperpage:parseInt(rowperpage) 
+            }
             try {
                 const token=localStorage.getItem('token')
-            const response=await axios.get(`http://localhost:3000/expense/get-expenses?page=${page}`,{headers:{"Authorization":token}})
+            const response=await axios.post(`http://localhost:3000/expense/get-expenses?page=${page}`,my_obj,{headers:{"Authorization":token}})
             listexpenses(response.data.expenses)
             showPagination(response.data)
             } catch (error) {

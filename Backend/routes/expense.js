@@ -6,7 +6,7 @@ const expenseController=require('../controllers/expense')
 
 // router.get('/',expenseController.GetExpensePage)
 
-router.get('/get-expenses',userAuthenticate.authenticate,expenseController.getExpenses)
+router.post('/get-expenses',userAuthenticate.authenticate,expenseController.getExpenses)
 
 router.post('/add-expense',userAuthenticate.authenticate,expenseController.AddExpense)
 

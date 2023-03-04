@@ -51,10 +51,12 @@ exports.AddExpense = async (req, res) => {
 
 }
 
-const expense_per_page = 10
+// const expense_per_page = 10
+// const expense_per_page=localStorage.getItem('rows')
 
 exports.getExpenses = async (req, res) => {
     try {
+        const expense_per_page=req.body.rowperpage
         const page = +req.query.page || 1
         let total_expenses = await Expense.count({ where: { userId: req.user.id } })
         // const expenses = await Expense.findAll({ where: { userId: req.user.id } },
