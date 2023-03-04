@@ -32,6 +32,7 @@
 
         <label for="rowperpage">Row per page:</label><br>
         <select type="number" name="rowperpage" id="rowperpage">
+            <!-- <option value=null>select</option> -->
             <option value=2>2</option>
             <option value=5>5</option>
             <option value=10>10</option>
@@ -155,6 +156,7 @@
             console.log("changed")
             const rowperpage=document.getElementById('rowperpage').value
             console.log(rowperpage)
+            localStorage.setItem('rows',rowperpage)
             const token=localStorage.getItem('token')
             const page=1;
             my_obj={
@@ -175,6 +177,7 @@
         
         window.addEventListener("DOMContentLoaded", async () => {
             const token=localStorage.getItem('token')
+            const rowperpage=JSON.parse(localStorage.getItem('rows'))
             const page=1;
             // const rowperpage=document.ge
             my_obj={

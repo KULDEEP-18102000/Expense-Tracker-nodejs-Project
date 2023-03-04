@@ -1,16 +1,1 @@
-{
-  "dependencies": {
-    "aws-sdk": "^2.1327.0",
-    "bcryptjs": "^2.4.3",
-    "body-parser": "^1.20.2",
-    "cors": "^2.8.5",
-    "express": "^4.18.2",
-    "jsonwebtoken": "^9.0.0",
-    "mysql2": "^3.1.2",
-    "razorpay": "^2.8.6",
-    "router": "^1.3.8",
-    "sequelize": "^6.29.0",
-    "sib-api-v3-sdk": "^8.5.0",
-    "uuid": "^9.0.0"
-  }
-}
+{"scripts":{"test":"echo \"Error: no test specified\" && exit 1","start":"NODE_ENV=production PASSWORD=kuldeepjadon@18 BUCKET_NAME=expensetrackersharpenerkuldeep IAM_USER_KEY=AKIA5QWHC5RRFOVYKUPI IAM_USER_SECRET=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 TOKEN_SIGNATURE=bobyiskuldeep RAZORPAY_KEY_ID=rzp_test_vaQi8LB2MM4hbT RAZORPAY_KEY_SECRET=ILy2Nyb7JS3eveMpyesgk7kk SIB_API_KEY=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 SIB_SENDER=jadonkuldeepsingh2@gmail.com node app.js","start-server":"node app.js","start:dev":"node app.js"},"dependencies":{"aws-sdk":"^2.1327.0","bcryptjs":"^2.4.3","body-parser":"^1.20.2","compression":"^1.7.4","cors":"^2.8.5","express":"^4.18.2","helmet":"^6.0.1","jsonwebtoken":"^9.0.0","morgan":"^1.10.0","mysql2":"^3.1.2","razorpay":"^2.8.6","router":"^1.3.8","sequelize":"^6.29.0","sib-api-v3-sdk":"^8.5.0","uuid":"^9.0.0"}}

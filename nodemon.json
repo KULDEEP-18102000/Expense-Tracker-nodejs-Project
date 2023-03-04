@@ -1,0 +1,13 @@
+{
+    "env":{
+        "PASSWORD":"kuldeepjadon@18",
+        "BUCKET_NAME":"expensetrackersharpenerkuldeep",
+        "IAM_USER_KEY":"AKIA5QWHC5RRFOVYKUPI",
+        "IAM_USER_SECRET":"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",
+        "TOKEN_SIGNATURE":"bobyiskuldeep",
+        "RAZORPAY_KEY_ID":"rzp_test_vaQi8LB2MM4hbT",
+        "RAZORPAY_KEY_SECRET":"ILy2Nyb7JS3eveMpyesgk7kk",
+        "SIB_API_KEY":"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",
+        "SIB_SENDER":"jadonkuldeepsingh2@gmail.com"
+    }
+}
