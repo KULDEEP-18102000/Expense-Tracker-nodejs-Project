@@ -42,7 +42,9 @@
         <button id="rzp-button1">Buy Premium</button>
     </div>
 
-    
+    <div id="pagination"></div>
+
+
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script>
         const expenseAmount = document.getElementById('amount')
@@ -95,8 +97,8 @@
                 }
             }
 
-            document.getElementById('report').onclick=async function(){
-                window.location.href='/Frontend/report.html'
+            document.getElementById('report').onclick = async function () {
+                window.location.href = '/Frontend/report.html'
             }
 
         } else {
@@ -139,29 +141,74 @@
 
 
         document.getElementById('my-form').addEventListener('submit', onsubmit)
-        window.addEventListener("DOMContentLoaded", getExpenses)
-
-
-
-
-
-
-        async function getExpenses() {
+        
+        window.addEventListener("DOMContentLoaded", async () => {
+            const token=localStorage.getItem('token')
+            const page=1;
             try {
-                const token = localStorage.getItem('token')
-                const expenses = await axios.get('http://localhost:3000/expense/get-expenses', { headers: { "Authorization": token } })
-                console.log(expenses.data)
-                for (let i = 0; i < expenses.data.length; i++) {
-                    const li = document.createElement('li')
-                    console.log(expenses.data[i])
-                    li.appendChild(document.createTextNode(`${expenses.data[i].amount} ${expenses.data[i].category} ${expenses.data[i].description}`))
-                    li.setAttribute("id", expenses.data[i].id)
-                    const delete_btn = `<button onclick="deleteFunction(event)">delete</button>`;
-                    li.innerHTML = li.innerHTML + delete_btn
-                    ul.appendChild(li)
-                }
+                const response=await axios.get(`http://localhost:3000/expense/get-expenses?page=${page}`,{headers:{"Authorization":token}})
+                console.log(response.data)
+            listexpenses(response.data.expenses)
+            showPagination(response.data)
             } catch (error) {
-                throw error
+                console.log(error)
+            }
+        })
+
+
+
+
+        const listexpenses = (expenses) => {
+            while(ul.hasChildNodes()){
+                ul.removeChild(ul.firstChild)
+            }
+            for (let i = 0; i < expenses.length; i++) {
+                const li = document.createElement('li')
+                console.log(expenses[i])
+                li.appendChild(document.createTextNode(`${expenses[i].amount} ${expenses[i].category} ${expenses[i].description}`))
+                li.setAttribute("id", expenses.id)
+                const delete_btn = `<button onclick="deleteFunction(event)">delete</button>`;
+                li.innerHTML = li.innerHTML + delete_btn
+                ul.appendChild(li)
+            }
+        }
+
+        async function getExpenses(page){
+            try {
+                const token=localStorage.getItem('token')
+            const response=await axios.get(`http://localhost:3000/expense/get-expenses?page=${page}`,{headers:{"Authorization":token}})
+            listexpenses(response.data.expenses)
+            showPagination(response.data)
+            } catch (error) {
+                console.log(error)
+            }
+        }
+
+        function showPagination({
+            currentPage, hasNextPage, nextPage, hasPreviousPage, previousPage, lastPage
+        }) {
+            const pagination=document.getElementById('pagination')
+            while(pagination.hasChildNodes()){
+                pagination.removeChild(pagination.firstChild)
+            }
+            // pagination.innerHTML = '';
+            if (hasPreviousPage) {
+                const btn2 = document.createElement('button')
+                btn2.innerHTML = previousPage
+                btn2.addEventListener('click', () =>  getExpenses(previousPage))
+                pagination.appendChild(btn2)
+            }
+
+            const btn1 = document.createElement('button')
+            btn1.innerHTML = `<h3>${currentPage}</h3>`
+            btn1.addEventListener('click', () =>  getExpenses(currentPage))
+            pagination.appendChild(btn1)
+
+            if (hasNextPage) {
+                const btn3 = document.createElement('button')
+                btn3.innerHTML = nextPage
+                btn3.addEventListener('click', () =>  getExpenses(nextPage))
+                pagination.appendChild(btn3)
             }
         }
 

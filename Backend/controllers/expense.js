@@ -3,10 +3,10 @@ const path = require('path')
 const Expense = require('../models/expense')
 const User = require('../models/user')
 const sequelize = require('../util/database')
-const S3service=require('../services/S3services')
+const S3service = require('../services/S3services')
 // const { resolve } = require('path')
-const UserServices=require('../services/userservices')
-const File=require('../models/files')
+const UserServices = require('../services/userservices')
+const File = require('../models/files')
 
 
 
@@ -19,11 +19,11 @@ exports.downloadexpense = async (req, res) => {
         const userId = req.user.id
         const filename = `Expense${userId}/${new Date()}.txt`
         const fileURl = await S3service.uploadToS3(stringifiedexpenses, filename)
-        await req.user.createFile({fileURl:fileURl})
+        await req.user.createFile({ fileURl: fileURl })
         res.status(201).json({ fileURl, success: true })
     } catch (error) {
         console.log(error)
-        res.status(500).json({fileURl:'',success:false,err:error})
+        res.status(500).json({ fileURl: '', success: false, err: error })
     }
 }
 
@@ -51,14 +51,33 @@ exports.AddExpense = async (req, res) => {
 
 }
 
-
+const expense_per_page = 10
 
 exports.getExpenses = async (req, res) => {
     try {
-        const expenses = await Expense.findAll({ where: { userId: req.user.id } })
-        res.status(200).json(expenses)
+        const page = +req.query.page || 1
+        let total_expenses = await Expense.count({ where: { userId: req.user.id } })
+        // const expenses = await Expense.findAll({ where: { userId: req.user.id } },
+        //     {
+        //         offset:(page-1)*expense_per_page,
+        //         limit:expense_per_page
+        //     })
+        const expenses=await req.user.getExpenses({
+            offset: (page - 1) * expense_per_page,
+            limit: expense_per_page
+        })
+        res.status(200).json({
+            expenses: expenses,
+            currentPage: page,
+            hasNextPage: expense_per_page * page < total_expenses,
+            nextPage: page + 1,
+            hasPreviousPage: page > 1,
+            previousPage: page - 1,
+            lastPage: Math.ceil(total_expenses / expense_per_page)
+        })
     } catch (error) {
         console.log(error)
+        res.status(500).json(error)
     }
 }
 
@@ -85,9 +104,9 @@ exports.deleteExpense = async (req, res) => {
 
 }
 
-exports.GetAllFiles=async(req,res)=>{
+exports.GetAllFiles = async (req, res) => {
     try {
-        const files=await File.findAll({userId:req.user.id})
+        const files = await File.findAll({ userId: req.user.id })
         res.status(200).json(files)
     } catch (error) {
         res.status(500).json(error)

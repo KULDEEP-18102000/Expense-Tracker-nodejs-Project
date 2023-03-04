@@ -7,19 +7,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Report</title>
 </head>
-<style>
-    table,
-    th,
-    td {
-        border: 1px solid black;
-    }
-</style>
+
 
 <body>
     <h4>Download Your Report</h4>
+    
     <Button  style="margin: 10px;" id="download">Download</Button>
 
+    <div id="pagination"></div>
+
     <script>
+        
         window.addEventListener("DOMContentLoaded",async()=>{
             const token=localStorage.getItem('token')
             const files=await axios.get('http://localhost:3000/user/getallfiles',{headers:{"Authorization":token}})
@@ -29,6 +27,8 @@
                 }
                 console.log(files)
         })
+
+        
 
         document.getElementById('download').onclick=async function(){
             const token=localStorage.getItem('token')
