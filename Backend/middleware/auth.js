@@ -4,7 +4,7 @@ const User=require('../models/user')
 const authenticate=(req,res,next)=>{
     try {
         const token=req.header('Authorization')
-        const user=jwt.verify(token,`${process.env.TOKEN_SIGNATURE}`)
+        const user=jwt.verify(token,process.env.TOKEN_SIGNATURE)
         console.log(user)
         User.findByPk(user.userId)
         .then(user=>{

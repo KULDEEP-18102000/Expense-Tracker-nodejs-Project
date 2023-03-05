@@ -12,7 +12,8 @@ const File = require('../models/files')
 
 exports.downloadexpense = async (req, res) => {
     try {
-        const expenses = await UserServices.getExpenses(req)
+        console.log("clicked")
+        const expenses = await Expense.findAll({ where: { userId: req.user.id } })
         console.log(expenses)
         const stringifiedexpenses = JSON.stringify(expenses)
 
@@ -108,7 +109,7 @@ exports.deleteExpense = async (req, res) => {
 
 exports.GetAllFiles = async (req, res) => {
     try {
-        const files = await File.findAll({ userId: req.user.id })
+        const files = await req.user.getFiles()
         res.status(200).json(files)
     } catch (error) {
         res.status(500).json(error)

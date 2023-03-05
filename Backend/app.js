@@ -3,6 +3,9 @@ const app=express()
 const fs = require('fs');
 const path=require('path')
 
+const dotenv = require('dotenv');
+dotenv.config();
+
 const cors=require('cors')
 
 const BodyParser=require('body-parser')
@@ -57,7 +60,7 @@ ForgotPassword.belongsTo(User)
 User.hasMany(File)
 File.belongsTo(User)
 
-// console.log(`${process.env.PASSWORD}`)
+console.log(process.env.PASSWORD)
 
 sequelize
 .sync({})

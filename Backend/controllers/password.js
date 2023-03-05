@@ -14,12 +14,12 @@ exports.forgotPassword = async (req, res) => {
     var Client = Sib.ApiClient.instance;
     // # Instantiate the client\
     var apiKey = Client.authentications['api-key'];
-    apiKey.apiKey = `${process.env.SIB_API_KEY}`;
+    apiKey.apiKey = process.env.SIB_API_KEY;
 
     const transEmailApi = new Sib.TransactionalEmailsApi();
 
     const sender = {
-        email: `${process.env.SIB_SENDER}`
+        email: process.env.SIB_SENDER
     }
 
     const receivers = [
