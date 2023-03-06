@@ -12,9 +12,9 @@ const BodyParser=require('body-parser')
 
 const sequelize=require('./util/database')
 
-const helmet = require('helmet');
+// const helmet = require('helmet');
 // const compression = require('compression');
-const morgan = require('morgan');
+// const morgan = require('morgan');
 
 const User=require('./models/user')
 const Expense=require('./models/expense')
@@ -22,14 +22,14 @@ const Order=require('./models/orders')
 const ForgotPassword=require('./models/forgotpasswordrequests')
 const File=require('./models/files')
 
-const accessLogStream = fs.createWriteStream(
-    path.join(__dirname, 'access.log'),
-    { flags: 'a' }
-  );
+// const accessLogStream = fs.createWriteStream(
+//     path.join(__dirname, 'access.log'),
+//     { flags: 'a' }
+//   );
   
-  app.use(helmet());
+  // app.use(helmet());
 //   app.use(compression());
-  app.use(morgan('combined', { stream: accessLogStream }));
+  // app.use(morgan('combined', { stream: accessLogStream }));
   
 
 const userRoutes=require('./routes/user')
@@ -48,6 +48,11 @@ app.use('/purchase',purchaseRoutes)
 app.use('/premium',premiumRoutes)
 app.use('/password',passwordRoutes)
 
+app.use((req,res)=>{
+  console.log(req.url)
+  res.sendFile(path.join(__dirname,`public/${req.url}`))
+})
+
 User.hasMany(Expense)
 Expense.belongsTo(User)
 
@@ -60,7 +65,7 @@ ForgotPassword.belongsTo(User)
 User.hasMany(File)
 File.belongsTo(User)
 
-console.log(process.env.PASSWORD)
+// console.log(process.env.PASSWORD)
 
 sequelize
 .sync({})

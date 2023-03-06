@@ -32,7 +32,7 @@ exports.forgotPassword = async (req, res) => {
         sender,
         to: receivers,
         subject: 'Your reset password',
-        htmlContent: `your reset password has been sent to you <a href="http://localhost:3000/password/resetpassword/${forgotpassword.id}">Reset Password</a> `
+        htmlContent: `your reset password has been sent to you <a href="http://3.109.32.194:3000/password/resetpassword/${forgotpassword.id}">Reset Password</a> `
     })
         .then(console.log)
         .catch(console.log)
