@@ -281,7 +281,7 @@
                 }
                 const token = localStorage.getItem('token')
                 const expense = await axios.post('http://3.109.32.194:3000/expense/add-expense', expense_obj, { headers: { "Authorization": token } })
-                window.location.href='expense.html'
+                window.location.href='/expense.html'
                 console.log(expense)
                 const li = document.createElement('li')
                 li.appendChild(document.createTextNode(`${expense.amount} ${expense.category} ${expense.description}`))
