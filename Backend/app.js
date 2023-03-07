@@ -49,8 +49,8 @@ app.use('/premium',premiumRoutes)
 app.use('/password',passwordRoutes)
 
 app.use((req,res)=>{
-  console.log(req.url)
-  res.sendFile(path.join(__dirname,`public/${req.url}`))
+  console.log(req.url.split("?")[0])
+  res.sendFile(path.join(__dirname,`public/${req.url.split("?")[0]}`))
 })
 
 User.hasMany(Expense)

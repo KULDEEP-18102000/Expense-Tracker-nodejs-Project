@@ -36,6 +36,7 @@ exports.AddExpense = async (req, res) => {
     const description = req.body.description
     try {
         const expense = await Expense.create({ amount: amount, category: category, description: description, userId: req.user.id }, { transaction: t })
+        // res.redirect('/expense.html')
         current_amount = req.user.Total_cost + parseInt(amount)
         await User.update({ Total_cost: current_amount },
             {

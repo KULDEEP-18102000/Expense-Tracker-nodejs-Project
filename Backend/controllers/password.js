@@ -6,14 +6,20 @@ const bcrypt=require('bcryptjs')
 
 
 exports.forgotPassword = async (req, res) => {
+    console.log(process.env.SIB_API_KEY)
+    console.log(process.env.SIB_SENDER)
     const useremail = req.body.email
-    const user = await User.findOne({ email: useremail })
-    const forgotpassword = await ForgotPassword.create({ id: uuidv4(), userId: user.id, isactive: true })
+    console.log(useremail)
+    const user = await User.findOne({where:{ email: useremail }})
+    console.log(user.dataValues)
+    const forgotpassword = await ForgotPassword.create({ id: uuidv4(), userId: user.dataValues.id, isactive: true })
+    console.log(forgotpassword)
 
     var Sib = require('sib-api-v3-sdk');
     var Client = Sib.ApiClient.instance;
     // # Instantiate the client\
     var apiKey = Client.authentications['api-key'];
+    
     apiKey.apiKey = process.env.SIB_API_KEY;
 
     const transEmailApi = new Sib.TransactionalEmailsApi();
