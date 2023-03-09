@@ -1,6 +1,10 @@
 import { Router } from "express";
+import { type } from "os";
 
 import { Todo } from "../models/todo";
+
+type RequestBody={text:string}
+type RequestParams={id:string}
 
 const todos: Todo[]=[]
 
@@ -11,9 +15,10 @@ router.get('/',(req,res,next)=>{
 })
 
 router.post('/todo',(req,res,next)=>{
+    const body=req.body as RequestBody
     const newTodo: Todo={
         id:new Date().toString(),
-        text:req.body.text
+        text:body.text
     };
 
     todos.push(newTodo)
@@ -22,7 +27,8 @@ router.post('/todo',(req,res,next)=>{
 
 router.delete('/todo/:id',(req,res,next)=>{
     try {
-        const id=req.params.id
+        const params=req.params as RequestParams
+        const id=params.id
         let todo=null
         for (let index = 0; index < todos.length; index++) {
             if(todos[index].id===id){
@@ -43,7 +49,8 @@ router.delete('/todo/:id',(req,res,next)=>{
 
 router.put('/todo/:id',(req,res,next)=>{
     try {
-        const id=req.params.id
+        const params=req.params as RequestParams
+        const id=params.id
         let todo=null
         for (let index = 0; index < todos.length; index++) {
             if(todos[index].id===id){
