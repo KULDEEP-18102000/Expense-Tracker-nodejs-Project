@@ -10,11 +10,10 @@ const cors=require('cors')
 
 const BodyParser=require('body-parser')
 
-const sequelize=require('./util/database')
+const mongoose=require('mongoose')
 
-// const helmet = require('helmet');
-// const compression = require('compression');
-// const morgan = require('morgan');
+// const sequelize=require('./util/database')
+
 
 const User=require('./models/user')
 const Expense=require('./models/expense')
@@ -22,14 +21,6 @@ const Order=require('./models/orders')
 const ForgotPassword=require('./models/forgotpasswordrequests')
 const File=require('./models/files')
 
-// const accessLogStream = fs.createWriteStream(
-//     path.join(__dirname, 'access.log'),
-//     { flags: 'a' }
-//   );
-  
-  // app.use(helmet());
-//   app.use(compression());
-  // app.use(morgan('combined', { stream: accessLogStream }));
   
 
 const userRoutes=require('./routes/user')
@@ -53,26 +44,35 @@ app.use((req,res)=>{
   res.sendFile(path.join(__dirname,`public/${req.url.split("?")[0]}`))
 })
 
-User.hasMany(Expense)
-Expense.belongsTo(User)
+// User.hasMany(Expense)
+// Expense.belongsTo(User)
 
-User.hasMany(Order)
-Order.belongsTo(User)
+// User.hasMany(Order)
+// Order.belongsTo(User)
 
-User.hasMany(ForgotPassword)
-ForgotPassword.belongsTo(User)
+// User.hasMany(ForgotPassword)
+// ForgotPassword.belongsTo(User)
 
-User.hasMany(File)
-File.belongsTo(User)
+// User.hasMany(File)
+// File.belongsTo(User)
 
 // console.log(process.env.PASSWORD)
 
-sequelize
-.sync({})
+// sequelize
+// .sync({})
+// .then(result=>{
+//     // console.log(result)
+//     app.listen(3000)
+// })
+// .catch(err=>{
+//     console.log(err)
+// })
+
+mongoose.connect('mongodb+srv://kuldeepjadon:kuldeepexpensetracker@cluster0.gcqi3a6.mongodb.net/?retryWrites=true&w=majority')
 .then(result=>{
-    // console.log(result)
-    app.listen(3000)
+  console.log("connected")
+  app.listen(3000)
 })
 .catch(err=>{
-    console.log(err)
+  console.log(err)
 })

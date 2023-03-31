@@ -26,7 +26,7 @@
         document.getElementById('download').onclick = async function () {
             console.log("clicked")
             const token = localStorage.getItem('token')
-            const response = await axios.get('http://3.109.32.194:3000/user/download', { headers: { "Authorization": token } })
+            const response = await axios.get('http://localhost:3000/user/download', { headers: { "Authorization": token } })
             if (response.status === 201) {
                 const a = document.createElement('a')
                 a.href = response.data.fileURl
@@ -41,7 +41,7 @@
 
         const getallfiles = async () => {
             const token = localStorage.getItem('token')
-            const files = await axios.get('http://3.109.32.194:3000/user/getallfiles', { headers: { "Authorization": token } })
+            const files = await axios.get('http://localhost:3000/user/getallfiles', { headers: { "Authorization": token } })
             for (let i = 0; i < files.data.length; i++) {
                 let file = files.data[i]
                 document.body.innerHTML = document.body.innerHTML + `<h5>${file.fileURl}-${file.createdAt}</h5>`

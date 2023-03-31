@@ -4,15 +4,16 @@ const User=require('../models/user')
 
 exports.getleaderboard = async (req, res) => {
     try {
-        const leaderboardofusers=await User.findAll({
-            attributes:['id','name',[Sequelize.fn('sum',Sequelize.col('expenses.amount')),'total_cost']],
-            include:[{
-                model:Expense,
-                attributes:[]
-            }]
-            ,group:['id'],
-            order:[['total_cost','DESC']]
-        })
+        // const leaderboardofusers=await User.find({
+        //     attributes:['id','name',[Sequelize.fn('sum',Sequelize.col('expenses.amount')),'total_cost']],
+        //     include:[{
+        //         model:Expense,
+        //         attributes:[]
+        //     }]
+        //     ,group:['id'],
+        //     order:[['total_cost','DESC']]
+        // })
+        const leaderboardofusers=await User.find({}).sort({Total_cost:-1})
         res.status(200).json(leaderboardofusers)
         // const expenses = await Expense.findAll({
         //     attributes:['userId',[Sequelize.fn('sum',Sequelize.col('expenses.amount')),'total_cost']],group:['userId']

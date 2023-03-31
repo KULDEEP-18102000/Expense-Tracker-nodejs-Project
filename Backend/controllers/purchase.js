@@ -13,12 +13,9 @@ const purchasepremium=async(req,res)=>{
             if(err){
                 throw new Error(JSON.stringify(err))
             }
-            req.user.createOrder({orderid:order.id,status:'PENDING'}).then(()=>{
-                return res.status(200).json({order,key_id:rzp.key_id})
-            })
-            .catch(err=>{
-                throw new Error(err)
-            })
+            const new_order=Order.create({userId:req.user._id,orderid:order.id,status:'PENDING'})
+            // const order=req.user.createOrder({orderid:order.id,status:'PENDING'})
+            return res.status(200).json({order,key_id:rzp.key_id})
         })
     } catch (error) {
         console.log(error)
@@ -26,31 +23,22 @@ const purchasepremium=async(req,res)=>{
     }
 }
 
-const updateTransactionStatus=(req,res)=>{
+const updateTransactionStatus=async(req,res)=>{
     try {
         const {payment_id,order_id}=req.body
-        Order.findOne({where:{orderid:order_id}}).then((order)=>{
-            order.update({paymentid:payment_id,status:'SUCCESSFUL'}).then(()=>{
-                req.user.update({ispremiumuser:true}).then(()=>{
-                    return res.status(202).json({success:true,message:'Transaction Successfull'})
-                
-                }).catch((err)=>{
-                    throw new Error(err)
-                })
-            })
-        })
-        .catch((err)=>{
-            throw new Error(err)
-        })
+        const order= await Order.findOne({orderid:order_id})
+        order.paymentid=payment_id
+        order.status='SUCCESSFUL'
+        await order.save()
+        // await order.update({paymentid:payment_id,status:'SUCCESSFUL'})
+        req.user.ispremiumuser=true
+        await req.user.save()
+        // await req.user.update({ispremiumuser:true})
+        return res.status(202).json({success:true,message:'Transaction Successfull'})
     } catch (error) {
         throw error
     }
 
-    // try {
-    //     Promise.all().then().catch()
-    // } catch (error) {
-        
-    // }
 }
 
 module.exports={

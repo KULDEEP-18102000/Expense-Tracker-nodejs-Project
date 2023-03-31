@@ -1,31 +1,84 @@
-const Sequelize=require('sequelize');
+const mongoose=require('mongoose')
 
-const sequelize=require('../util/database')
+const Schema=mongoose.Schema
 
-const User=sequelize.define('users',{
-    id:{
-        type:Sequelize.INTEGER,
-        autoIncrement:true,
-        allowNull:false,
-        primaryKey:true
-    },
+const userSchema= new Schema({
     name:{
-        type:Sequelize.STRING,
-        allowNull:false
+        type:String,
+        required:true
     },
     email:{
-        type:Sequelize.STRING,
-        unique:true,
-        allowNull:false
+        type:String,
+        required:true
     },
     password:{
-        type:Sequelize.STRING,
-        allowNull:false
+        type:String,
+        required:true
     },
-    ispremiumuser:Sequelize.BOOLEAN,
+    ispremiumuser:{
+        type:Boolean
+    },
     Total_cost:{
-        type:Sequelize.INTEGER
+        type:Number
     }
 })
 
-module.exports=User
+module.exports=mongoose.model('User',userSchema)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// const Sequelize=require('sequelize');
+
+// const sequelize=require('../util/database')
+
+// const User=sequelize.define('users',{
+//     id:{
+//         type:Sequelize.INTEGER,
+//         autoIncrement:true,
+//         allowNull:false,
+//         primaryKey:true
+//     },
+//     name:{
+//         type:Sequelize.STRING,
+//         allowNull:false
+//     },
+//     email:{
+//         type:Sequelize.STRING,
+//         unique:true,
+//         allowNull:false
+//     },
+//     password:{
+//         type:Sequelize.STRING,
+//         allowNull:false
+//     },
+//     ispremiumuser:Sequelize.BOOLEAN,
+//     Total_cost:{
+//         type:Sequelize.INTEGER
+//     }
+// })
+
+// module.exports=User
+

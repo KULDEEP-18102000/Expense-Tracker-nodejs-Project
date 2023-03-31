@@ -7,9 +7,9 @@ const rowperpage = document.getElementById('rowperpage').value
 console.log(rowperpage)
 localStorage.setItem('rows', rowperpage)
 
-const isPremium = JSON.parse(localStorage.getItem('isPremium'))
+const isPremium = localStorage.getItem('isPremium')
 console.log(isPremium)
-if (isPremium != null) {
+if (isPremium != undefined) {
     console.log("inside")
     const Premium = document.getElementById('premium')
     const premium_btn = document.getElementById('rzp-button1')
@@ -41,13 +41,13 @@ if (isPremium != null) {
         const ul = document.createElement('ul')
         ul.setAttribute('id', 'leader-items')
         Premium.appendChild(ul)
-        const users = await axios.get('http://3.109.32.194:3000/premium/showleaderboard')
+        const users = await axios.get('http://localhost:3000/premium/showleaderboard')
         console.log(users)
         for (let i = 0; i < users.data.length; i++) {
             const li = document.createElement('li')
             console.log(users.data[i])
-            li.appendChild(document.createTextNode(`${users.data[i].name}  ${users.data[i].total_cost}`))
-            li.setAttribute("id", users.data[i].id)
+            li.appendChild(document.createTextNode(`${users.data[i].name}  ${users.data[i].Total_cost}`))
+            li.setAttribute("id", users.data[i]._id)
             // const delete_btn = `<button onclick="deleteFunction(event)">delete</button>`;
             // li.innerHTML = li.innerHTML + delete_btn
             ul.appendChild(li)
@@ -61,13 +61,13 @@ if (isPremium != null) {
 } else {
     document.getElementById('rzp-button1').onclick = async function (e) {
         const token = localStorage.getItem('token')
-        const response = await axios.get('http://3.109.32.194:3000/purchase/premiummembership', { headers: { "Authorization": token } })
+        const response = await axios.get('http://localhost:3000/purchase/premiummembership', { headers: { "Authorization": token } })
         console.log(response)
         var options = {
             "key": response.data.key_id,
             "order_id": response.data.order.id,
             "handler": async function (response) {
-                await axios.post('http://3.109.32.194:3000/purchase/updatetransactionstatus', {
+                await axios.post('http://localhost:3000/purchase/updatetransactionstatus', {
                     order_id: options.order_id,
                     payment_id: response.razorpay_payment_id
                 }, { headers: { "Authorization": token } })
@@ -119,7 +119,7 @@ document.getElementById('rowperpage').onchange = async function () {
         rowperpage: parseInt(rowperpage)
     }
     try {
-        const response = await axios.post(`http://3.109.32.194:3000/expense/get-expenses?page=${page}`, my_obj, { headers: { "Authorization": token } })
+        const response = await axios.post(`http://localhost:3000/expense/get-expenses?page=${page}`, my_obj, { headers: { "Authorization": token } })
         console.log(response.data)
         listexpenses(response.data.expenses)
         showPagination(response.data)
@@ -140,7 +140,7 @@ window.addEventListener("DOMContentLoaded", async () => {
         rowperpage: parseInt(rowperpage)
     }
     try {
-        const response = await axios.post(`http://3.109.32.194:3000/expense/get-expenses?page=${page}`, my_obj, { headers: { "Authorization": token } })
+        const response = await axios.post(`http://localhost:3000/expense/get-expenses?page=${page}`, my_obj, { headers: { "Authorization": token } })
         console.log(response.data)
         listexpenses(response.data.expenses)
         showPagination(response.data)
@@ -160,7 +160,7 @@ const listexpenses = (expenses) => {
         const li = document.createElement('li')
         console.log(expenses[i])
         li.appendChild(document.createTextNode(`${expenses[i].amount} ${expenses[i].category} ${expenses[i].description}`))
-        li.setAttribute("id", expenses[i].id)
+        li.setAttribute("id", expenses[i]._id)
         const delete_btn = `<button onclick="deleteFunction(event)">delete</button>`;
         li.innerHTML = li.innerHTML + delete_btn
         ul.appendChild(li)
@@ -174,7 +174,7 @@ async function getExpenses(page) {
     }
     try {
         const token = localStorage.getItem('token')
-        const response = await axios.post(`http://3.109.32.194:3000/expense/get-expenses?page=${page}`, my_obj, { headers: { "Authorization": token } })
+        const response = await axios.post(`http://localhost:3000/expense/get-expenses?page=${page}`, my_obj, { headers: { "Authorization": token } })
         listexpenses(response.data.expenses)
         showPagination(response.data)
     } catch (error) {
@@ -218,12 +218,13 @@ async function onsubmit() {
             description: expenseDescription.value
         }
         const token = localStorage.getItem('token')
-        const expense = await axios.post('http://3.109.32.194:3000/expense/add-expense', expense_obj, { headers: { "Authorization": token } })
+        console.log(expense_obj)
+        const expense = await axios.post('http://localhost:3000/expense/add-expense', expense_obj, { headers: { "Authorization": token } })
         window.location.href='/expense.html'
         console.log(expense)
         const li = document.createElement('li')
         li.appendChild(document.createTextNode(`${expense.amount} ${expense.category} ${expense.description}`))
-        li.setAttribute("id", expense.id)
+        li.setAttribute("id", expense._id)
         const delete_btn = `<button onclick="deleteFunction(event)">delete</button>`;
         li.innerHTML = li.innerHTML + delete_btn
         ul.appendChild(li)
@@ -239,7 +240,7 @@ async function deleteFunction(event) {
         const li_item = event.target.parentNode
         ul_item.removeChild(li_item)
         const token = localStorage.getItem('token')
-        await axios.delete(`http://3.109.32.194:3000/expense/delete-expense/${event.target.parentNode.id}`, { headers: { "Authorization": token } })
+        await axios.delete(`http://localhost:3000/expense/delete-expense/${event.target.parentNode.id}`, { headers: { "Authorization": token } })
     } catch (error) {
         throw error
     }
